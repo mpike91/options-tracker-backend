@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using Microsoft.EntityFrameworkCore;
 // using System.TimeZoneInfo;
 using System.Linq;
+using ProverbsTrading.Models.DTOs;
 
 public class TradierService {
     private readonly AppDbContext _db;
@@ -32,11 +33,11 @@ public class TradierService {
                     var json = await response.Content.ReadAsStringAsync();
                     var expirationsResponse = JsonSerializer.Deserialize<TradierExpirationResponse>(json);
 
-                    var expirationsList = expirationsResponse != null ? expirationsResponse.Expirations.Select(e => DateTime.Parse(e!)).ToList() : new List<DateTime>();  // ! null-forgiving
+                    var expirationsList = expirationsResponse != null ? expirationsResponse.Expirations.Select(e => DateTime.Parse(e!)).ToList() : new List<DateTime>();
 
                     var nextExpirations = expirationsList.Where(e => e > DateTime.Today && e.DayOfWeek == DayOfWeek.Friday).OrderBy(e => e).Take(2).ToList();
                     _db.OptionExpirations.RemoveRange(_db.OptionExpirations.Where(o => o.Symbol == symbol));
-                    _db.OptionExpirations.AddRange(nextExpirations.Select(e => new OptionExpiration { Symbol = symbol, Expiration = e, LastUpdated = GetEasternTime() }));
+                    _db.OptionExpirations.AddRange(nextExpirations.Select(e => new OptionExpiration { Symbol = symbol, Expiration = e, LastUpdated = DateTimeUtils.GetEasternTime() }));
                     await _db.SaveChangesAsync();
                 } finally {
                     _semaphore.Release();
@@ -73,7 +74,7 @@ public class TradierService {
                         Theta = c.Greeks?.Theta ?? 0,
                         Vega = c.Greeks?.Vega ?? 0,
                         Rho = c.Greeks?.Rho ?? 0,
-                        LastUpdated = GetEasternTime()
+                        LastUpdated = DateTimeUtils.GetEasternTime()
                     }).ToList() : new List<OptionChain>();
 
                     _db.OptionChains.RemoveRange(_db.OptionChains.Where(o => o.Symbol == exp.Symbol && o.Expiration == exp.Expiration));
@@ -109,7 +110,7 @@ public class TradierService {
                         Low = h.Low,
                         Close = h.Close,
                         Volume = h.Volume,
-                        LastUpdated = GetEasternTime()
+                        LastUpdated = DateTimeUtils.GetEasternTime()
                     }).ToList() : new List<MarketHistory>();
 
                     _db.MarketHistories.RemoveRange(_db.MarketHistories.Where(m => m.Symbol == symbol));
@@ -123,36 +124,58 @@ public class TradierService {
         await Task.WhenAll(tasks);
     }
 
-    public async Task<List<object>> GetFilteredOptions(double minRor = 1.0, int rsiThreshold = 50, double bbLowerPercent = 33.0) {
+    public async Task<List<StockScreenerResultDTO>> GetFilteredOptions(double minRor = 1.0, int rsiThreshold = 50, double bbLowerPercent = 33.0)
+    {
         var chains = await _db.OptionChains.ToListAsync();
         var historyGroups = await _db.MarketHistories.GroupBy(m => m.Symbol).ToDictionaryAsync(g => g.Key, g => g.ToList());
 
-        var results = new List<object>();
-        foreach (var kvp in historyGroups) {
+        var results = new List<StockScreenerResultDTO>();
+        foreach (var kvp in historyGroups)
+        {
             var symbol = kvp.Key;
             var history = kvp.Value.OrderByDescending(h => h.Date).ToList();
             var closes = history.Select(h => h.Close).ToArray();
-            if (closes.Length < 200) continue;
+            if (closes.Length < 200) continue;  // Ensure enough data for SMAs
 
-            var price = closes.FirstOrDefault(0);
-            var rsi = CalculateRsi(closes, 14);
-            var (upper, lower) = CalculateBollinger(closes, 20);
-            var bbPercent = ((price - lower) / (upper - lower)) * 100;
+            var price = await GetCurrentPriceAsync(symbol);
+            var rsi = CalculateRsi(closes.TakeLast(14 + 1).ToArray());
+            var (upper, lower) = CalculateBollinger(closes.TakeLast(20).ToArray());
+            var bbPercent = (price - lower) / (upper - lower) * 100;
 
-            if (rsi < rsiThreshold && bbPercent < bbLowerPercent) {
+            if (rsi < rsiThreshold && bbPercent < bbLowerPercent)
+            {
                 var puts = chains.Where(c => c.Symbol == symbol && c.OptionType == "put" && c.Strike < price).ToList();
-                var filteredPuts = puts.Where(p => (p.Ask / p.Strike) * 100 >= minRor).ToList();
+                var filteredPuts = puts.Where(p => CalculateRor((p.Bid + p.Ask) / 2, p.Strike) >= minRor)
+                                       .Select(p => new FilteredOptionDTO
+                                       {
+                                           Strike = p.Strike,
+                                           Bid = p.Bid,
+                                           Ask = p.Ask,
+                                           Volume = p.Volume,
+                                           OpenInterest = p.OpenInterest,
+                                           ImpliedVol = p.ImpliedVol,
+                                           Delta = p.Delta,
+                                           // Add others
+                                       }).ToList();
 
-                results.Add(new { Symbol = symbol, FilteredPuts = filteredPuts, SMA = CalculateSma(closes), RSI = rsi, BBPercent = bbPercent, Historical = history });
+                results.Add(new StockScreenerResultDTO
+                {
+                    Symbol = symbol,
+                    CurrentPrice = price,
+                    RSI = rsi,
+                    BBPercent = bbPercent,
+                    SMAs = CalculateSma(closes),
+                    FilteredPuts = filteredPuts
+                });
             }
         }
         return results;
     }
 
-    private double GetCurrentPrice(string symbol) {
-        var response = _httpClient.GetAsync($"markets/quotes?symbols={symbol}").Result;
+    private async Task<double> GetCurrentPriceAsync(string symbol) {
+        var response = await _httpClient.GetAsync($"markets/quotes?symbols={symbol}");
         response.EnsureSuccessStatusCode();
-        var json = response.Content.ReadAsStringAsync().Result;
+        var json = await response.Content.ReadAsStringAsync();
         var dict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json);
         if (dict == null || !dict.ContainsKey("quotes") || dict["quotes"].ValueKind != JsonValueKind.Array || dict["quotes"].GetArrayLength() == 0)
             throw new Exception("Invalid or missing quotes data from Tradier API.");
@@ -185,10 +208,5 @@ public class TradierService {
 
     private (double S50, double S100, double S200) CalculateSma(double[] closes) {
         return (Statistics.Mean(closes.TakeLast(50).ToArray()), Statistics.Mean(closes.TakeLast(100).ToArray()), Statistics.Mean(closes.TakeLast(200).ToArray()));
-    }
-
-    private DateTime GetEasternTime() {
-        var eastern = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
-        return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, eastern);
     }
 }
