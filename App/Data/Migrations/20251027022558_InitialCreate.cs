@@ -18,7 +18,8 @@ namespace options_tracker_backend.Migrations
                 defaultValue: "",
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)",
-                oldNullable: true);
+                oldNullable: true
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
@@ -28,7 +29,8 @@ namespace options_tracker_backend.Migrations
                 defaultValue: "",
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)",
-                oldNullable: true);
+                oldNullable: true
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "Symbol",
@@ -38,7 +40,8 @@ namespace options_tracker_backend.Migrations
                 defaultValue: "",
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)",
-                oldNullable: true);
+                oldNullable: true
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "Symbol",
@@ -48,7 +51,8 @@ namespace options_tracker_backend.Migrations
                 defaultValue: "",
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)",
-                oldNullable: true);
+                oldNullable: true
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "OptionType",
@@ -58,7 +62,8 @@ namespace options_tracker_backend.Migrations
                 defaultValue: "",
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)",
-                oldNullable: true);
+                oldNullable: true
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "Symbol",
@@ -68,7 +73,8 @@ namespace options_tracker_backend.Migrations
                 defaultValue: "",
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)",
-                oldNullable: true);
+                oldNullable: true
+            );
         }
 
         /// <inheritdoc />
@@ -80,7 +86,8 @@ namespace options_tracker_backend.Migrations
                 type: "nvarchar(max)",
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
+                oldType: "nvarchar(max)"
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
@@ -88,7 +95,8 @@ namespace options_tracker_backend.Migrations
                 type: "nvarchar(max)",
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
+                oldType: "nvarchar(max)"
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "Symbol",
@@ -96,7 +104,8 @@ namespace options_tracker_backend.Migrations
                 type: "nvarchar(max)",
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
+                oldType: "nvarchar(max)"
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "Symbol",
@@ -104,7 +113,8 @@ namespace options_tracker_backend.Migrations
                 type: "nvarchar(max)",
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
+                oldType: "nvarchar(max)"
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "OptionType",
@@ -112,7 +122,8 @@ namespace options_tracker_backend.Migrations
                 type: "nvarchar(max)",
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
+                oldType: "nvarchar(max)"
+            );
 
             migrationBuilder.AlterColumn<string>(
                 name: "Symbol",
@@ -120,7 +131,8 @@ namespace options_tracker_backend.Migrations
                 type: "nvarchar(max)",
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
+                oldType: "nvarchar(max)"
+            );
         }
     }
 }

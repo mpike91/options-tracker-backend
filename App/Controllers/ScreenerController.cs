@@ -16,7 +16,8 @@ public class ScreenerController : ControllerBase
     public async Task<ActionResult<List<StockScreenerResultDTO>>> GetFilteredOptions(
         [FromQuery] double minRor = 1.0,
         [FromQuery] int rsiThreshold = 50,
-        [FromQuery] double bbLowerPercent = 33.0)
+        [FromQuery] double bbLowerPercent = 33.0
+    )
     {
         try
         {
@@ -25,17 +26,24 @@ public class ScreenerController : ControllerBase
                 return BadRequest("Invalid parameter values.");
             }
 
-            var results = await _tradierService.GetFilteredOptions(minRor, rsiThreshold, bbLowerPercent);
+            var results = await _tradierService.GetFilteredOptions(
+                minRor,
+                rsiThreshold,
+                bbLowerPercent
+            );
             if (!results.Any())
             {
-                return NoContent();  // Or Ok with empty list, depending on preference
+                return NoContent(); // Or Ok with empty list, depending on preference
             }
             return Ok(results);
         }
         catch (Exception ex)
         {
             // Log ex (e.g., via ILogger in production)
-            return StatusCode(500, $"An error occurred while fetching screener data. Error: {ex.Message}");
+            return StatusCode(
+                500,
+                $"An error occurred while fetching screener data. Error: {ex.Message}"
+            );
         }
     }
 }

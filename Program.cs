@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 // Add this for Swagger UI (install via NuGet: dotnet add package Swashbuckle.AspNetCore)
 using Microsoft.OpenApi.Models;
 using ProverbsTrading.Services.Background;
@@ -13,8 +13,11 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 
 // Add DB (use a temp LocalDB for local testing; Azure later)
-builder.Services.AddDbContext<AppDbContext>(options => 
-    options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=ProverbsTradingDb;Trusted_Connection=True;"));
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(
+        "Server=(localdb)\\MSSQLLocalDB;Database=ProverbsTradingDb;Trusted_Connection=True;"
+    )
+);
 
 // Add Services
 builder.Services.AddScoped<TradierService>();
@@ -25,7 +28,8 @@ builder.Services.AddHttpClient<CboeService>();
 builder.Services.AddHostedService<WeeklyCboeFetcher>();
 
 // Add Identity
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder
+    .Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
@@ -36,12 +40,14 @@ builder.Services.AddAuthentication().AddJwtBearer();
 builder.Services.AddAuthorization();
 
 // Add CORS for frontend
-builder.Services.AddCors(options => {
+builder.Services.AddCors(options =>
+{
     options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
 // Suggestion: Add Swagger for API testing (free, enhances dev experience)
-builder.Services.AddSwaggerGen(c => {
+builder.Services.AddSwaggerGen(c =>
+{
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Proverbs Trading API", Version = "v1" });
 });
 

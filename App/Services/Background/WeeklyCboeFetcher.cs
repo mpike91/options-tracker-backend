@@ -5,7 +5,7 @@ namespace ProverbsTrading.Services.Background;
 
 public class WeeklyCboeFetcher : BackgroundService
 {
-    private readonly IServiceProvider _serviceProvider;  // To create scopes
+    private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<WeeklyCboeFetcher> _logger;
 
     public WeeklyCboeFetcher(IServiceProvider serviceProvider, ILogger<WeeklyCboeFetcher> logger)
@@ -18,7 +18,7 @@ public class WeeklyCboeFetcher : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            var now = DateTimeUtils.GetEasternTime();  // Use utils
+            var now = DateTimeUtils.GetEasternTime(); // Use utils
             if (now.DayOfWeek == DayOfWeek.Saturday && now.Hour == 0 && now.Minute == 0)
             {
                 try
@@ -33,7 +33,7 @@ public class WeeklyCboeFetcher : BackgroundService
                     _logger.LogError(ex, "Error during weekly CBOE update.");
                 }
             }
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);  // Check every minute
+            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken); // Check every minute
         }
     }
 }

@@ -1,6 +1,7 @@
 namespace ProverbsTrading.Models;
 
-public class MarketHistory {
+public class MarketHistory
+{
     public int Id { get; set; }
     public string Symbol { get; set; } = string.Empty;
     public DateTime Date { get; set; }

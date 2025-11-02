@@ -16,24 +16,49 @@ namespace options_tracker_backend.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(
+                        type: "nvarchar(256)",
+                        maxLength: 256,
+                        nullable: true
+                    ),
+                    NormalizedName = table.Column<string>(
+                        type: "nvarchar(256)",
+                        maxLength: 256,
+                        nullable: true
+                    ),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    UserName = table.Column<string>(
+                        type: "nvarchar(256)",
+                        maxLength: 256,
+                        nullable: true
+                    ),
+                    NormalizedUserName = table.Column<string>(
+                        type: "nvarchar(256)",
+                        maxLength: 256,
+                        nullable: true
+                    ),
+                    Email = table.Column<string>(
+                        type: "nvarchar(256)",
+                        maxLength: 256,
+                        nullable: true
+                    ),
+                    NormalizedEmail = table.Column<string>(
+                        type: "nvarchar(256)",
+                        maxLength: 256,
+                        nullable: true
+                    ),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -41,20 +66,25 @@ namespace options_tracker_backend.Migrations
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnd = table.Column<DateTimeOffset>(
+                        type: "datetimeoffset",
+                        nullable: true
+                    ),
                     LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "MarketHistories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table
+                        .Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Symbol = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -63,18 +93,20 @@ namespace options_tracker_backend.Migrations
                     Low = table.Column<double>(type: "float", nullable: false),
                     Close = table.Column<double>(type: "float", nullable: false),
                     Volume = table.Column<int>(type: "int", nullable: false),
-                    LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MarketHistories", x => x.Id);
-                });
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "OptionChains",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table
+                        .Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Symbol = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Expiration = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -90,52 +122,58 @@ namespace options_tracker_backend.Migrations
                     Theta = table.Column<double>(type: "float", nullable: false),
                     Vega = table.Column<double>(type: "float", nullable: false),
                     Rho = table.Column<double>(type: "float", nullable: false),
-                    LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OptionChains", x => x.Id);
-                });
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "OptionExpirations",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table
+                        .Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Symbol = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Expiration = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OptionExpirations", x => x.Id);
-                });
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "WeeklyStocks",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table
+                        .Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Symbol = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_WeeklyStocks", x => x.Id);
-                });
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table
+                        .Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -145,18 +183,21 @@ namespace options_tracker_backend.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table
+                        .Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -166,8 +207,10 @@ namespace options_tracker_backend.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserLogins",
@@ -175,26 +218,34 @@ namespace options_tracker_backend.Migrations
                 {
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ProviderDisplayName = table.Column<string>(
+                        type: "nvarchar(max)",
+                        nullable: true
+                    ),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.PrimaryKey(
+                        "PK_AspNetUserLogins",
+                        x => new { x.LoginProvider, x.ProviderKey }
+                    );
                     table.ForeignKey(
                         name: "FK_AspNetUserLogins_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -204,14 +255,17 @@ namespace options_tracker_backend.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade
+                    );
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserTokens",
@@ -220,94 +274,100 @@ namespace options_tracker_backend.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.PrimaryKey(
+                        "PK_AspNetUserTokens",
+                        x => new
+                        {
+                            x.UserId,
+                            x.LoginProvider,
+                            x.Name,
+                        }
+                    );
                     table.ForeignKey(
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
-                column: "RoleId");
+                column: "RoleId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
                 unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                filter: "[NormalizedName] IS NOT NULL"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
                 table: "AspNetUserClaims",
-                column: "UserId");
+                column: "UserId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserLogins_UserId",
                 table: "AspNetUserLogins",
-                column: "UserId");
+                column: "UserId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserRoles_RoleId",
                 table: "AspNetUserRoles",
-                column: "RoleId");
+                column: "RoleId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 table: "AspNetUsers",
-                column: "NormalizedEmail");
+                column: "NormalizedEmail"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                filter: "[NormalizedUserName] IS NOT NULL"
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "AspNetRoleClaims");
+            migrationBuilder.DropTable(name: "AspNetRoleClaims");
 
-            migrationBuilder.DropTable(
-                name: "AspNetUserClaims");
+            migrationBuilder.DropTable(name: "AspNetUserClaims");
 
-            migrationBuilder.DropTable(
-                name: "AspNetUserLogins");
+            migrationBuilder.DropTable(name: "AspNetUserLogins");
 
-            migrationBuilder.DropTable(
-                name: "AspNetUserRoles");
+            migrationBuilder.DropTable(name: "AspNetUserRoles");
 
-            migrationBuilder.DropTable(
-                name: "AspNetUserTokens");
+            migrationBuilder.DropTable(name: "AspNetUserTokens");
 
-            migrationBuilder.DropTable(
-                name: "MarketHistories");
+            migrationBuilder.DropTable(name: "MarketHistories");
 
-            migrationBuilder.DropTable(
-                name: "OptionChains");
+            migrationBuilder.DropTable(name: "OptionChains");
 
-            migrationBuilder.DropTable(
-                name: "OptionExpirations");
+            migrationBuilder.DropTable(name: "OptionExpirations");
 
-            migrationBuilder.DropTable(
-                name: "WeeklyStocks");
+            migrationBuilder.DropTable(name: "WeeklyStocks");
 
-            migrationBuilder.DropTable(
-                name: "AspNetRoles");
+            migrationBuilder.DropTable(name: "AspNetRoles");
 
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
+            migrationBuilder.DropTable(name: "AspNetUsers");
         }
     }
 }

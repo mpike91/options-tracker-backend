@@ -1,5 +1,3 @@
-using System;
-
 public static class DateTimeUtils
 {
     public static DateTime GetEasternTime()
@@ -8,7 +6,8 @@ public static class DateTimeUtils
         return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, eastern);
     }
 
-    public static DateTime ToEasternTime(this DateTime dateTime) {
+    public static DateTime ToEasternTime(this DateTime dateTime)
+    {
         var eastern = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
         return TimeZoneInfo.ConvertTimeFromUtc(dateTime, eastern);
     }

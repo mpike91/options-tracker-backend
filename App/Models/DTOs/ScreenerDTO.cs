@@ -1,17 +1,16 @@
 namespace ProverbsTrading.Models.DTOs
-
 {
     public class FilteredOptionDTO
     {
         public double Strike { get; set; }
         public double Bid { get; set; }
         public double Ask { get; set; }
-        public double Premium => (Bid + Ask) / 2;  // Mid-price for simplicity
+        public double Premium => (Bid + Ask) / 2; // Mid-price for simplicity
         public double Ror => (Premium / Strike) * 100;
         public int Volume { get; set; }
         public int OpenInterest { get; set; }
         public double ImpliedVol { get; set; }
-        public double Delta { get; set; }  // Include Greeks for advanced analysis
+        public double Delta { get; set; } // Include Greeks for advanced analysis
         // Add more as needed, e.g., Gamma, Theta
     }
 
