@@ -1,5 +1,3 @@
-// using System.TimeZoneInfo;
-using System.Linq;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using MathNet.Numerics.Statistics;
@@ -28,9 +26,11 @@ public class TradierService
         );
     }
 
+    public async Task UpdateWeeklyOptionableStocksTypesAsync() { }
+
     public async Task FetchExpirationsForAllStocksAsync()
     {
-        var stocks = await _db.WeeklyStocks.Select(s => s.Symbol).ToListAsync();
+        var stocks = await _db.WeeklyOptionableStocks.Select(s => s.Symbol).ToListAsync();
         var tasks = new List<Task>();
         foreach (var symbol in stocks)
         {
@@ -146,7 +146,7 @@ public class TradierService
 
     public async Task FetchHistoryForAllStocksAsync()
     {
-        var stocks = await _db.WeeklyStocks.Select(s => s.Symbol).ToListAsync();
+        var stocks = await _db.WeeklyOptionableStocks.Select(s => s.Symbol).ToListAsync();
         var tasks = new List<Task>();
         var startDate = DateTime.Today.AddYears(-1).ToString("yyyy-MM-dd");
         var endDate = DateTime.Today.ToString("yyyy-MM-dd");

@@ -1,6 +1,3 @@
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-
 namespace ProverbsTrading.Services.Background;
 
 public class WeeklyCboeFetcher : BackgroundService
@@ -25,7 +22,7 @@ public class WeeklyCboeFetcher : BackgroundService
                 {
                     using var scope = _serviceProvider.CreateScope();
                     var cboeService = scope.ServiceProvider.GetRequiredService<CboeService>();
-                    await cboeService.UpdateWeeklyStocksAsync();
+                    await cboeService.UpdateWeeklyOptionableStocksAsync();
                     _logger.LogInformation("Weekly CBOE stocks updated at {Time}", now);
                 }
                 catch (Exception ex)

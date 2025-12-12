@@ -15,10 +15,10 @@ public class CboeService
         _httpClient = httpClient;
     }
 
-    public async Task<List<WeeklyStockDTO>> GetWeeklyStocksAsync()
+    public async Task<List<WeeklyOptionableStockDTO>> GetWeeklyOptionableStocksAsync()
     {
         var stocks = await _db
-            .WeeklyStocks.Select(s => new WeeklyStockDTO
+            .WeeklyOptionableStocks.Select(s => new WeeklyOptionableStockDTO
             {
                 Symbol = s.Symbol,
                 Name = s.Name,
@@ -29,19 +29,19 @@ public class CboeService
         return stocks;
     }
 
-    public async Task<WeeklyStockCommaSeparatedListDTO> GetWeeklyStocksCommaSeparatedListAsync()
+    public async Task<WeeklyOptionableStocksCommaSeparatedDTO> GetWeeklyOptionableStocksCommaSeparatedListAsync()
     {
-        var stocks = await GetWeeklyStocksAsync();
+        var stocks = await GetWeeklyOptionableStocksAsync();
         var commaSeparatedSymbols = string.Join(",", stocks.Select(stock => stock.Symbol));
 
-        return new WeeklyStockCommaSeparatedListDTO
+        return new WeeklyOptionableStocksCommaSeparatedDTO
         {
-            SymbolCount = stocks.Count,
-            CommaSeparatedSymbolList = commaSeparatedSymbols,
+            Count = stocks.Count,
+            CommaSeparatedList = commaSeparatedSymbols,
         };
     }
 
-    public async Task UpdateWeeklyStocksAsync()
+    public async Task UpdateWeeklyOptionableStocksAsync()
     {
         var csvUrl = "https://www.cboe.com/available_weeklys/get_csv_download/";
         try
@@ -54,8 +54,7 @@ public class CboeService
             {
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
-                    // No ReadHeader() - parse index-based to handle irregular structure
-                    var newStocks = new List<WeeklyStock>();
+                    var newStocks = new List<WeeklyOptionableStock>();
                     while (csv.Read())
                     {
                         string? symbol = null;
@@ -78,7 +77,7 @@ public class CboeService
                             )
                             {
                                 newStocks.Add(
-                                    new WeeklyStock
+                                    new WeeklyOptionableStock
                                     {
                                         Symbol = symbol,
                                         Name = name,
@@ -89,11 +88,11 @@ public class CboeService
                         }
                     }
 
-                    var existing = await _db.WeeklyStocks.ToListAsync();
-                    _db.WeeklyStocks.RemoveRange(
+                    var existing = await _db.WeeklyOptionableStocks.ToListAsync();
+                    _db.WeeklyOptionableStocks.RemoveRange(
                         existing.Where(e => !newStocks.Any(n => n.Symbol == e.Symbol))
                     );
-                    _db.WeeklyStocks.AddRange(
+                    _db.WeeklyOptionableStocks.AddRange(
                         newStocks.Where(n => !existing.Any(e => e.Symbol == n.Symbol))
                     );
                     await _db.SaveChangesAsync();
